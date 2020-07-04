@@ -1,73 +1,57 @@
-import React, { Component } from "react";
-import {Card, CardBody, CardImg, CardImgOverlay, CardText, CardTitle } from "reactstrap";
-/*creating new component */
+import React, { Component } from 'react';
+import { Media } from 'reactstrap';
+import { Card, CardImg, CardImgOverlay, CardText, CardBody,CardTitle } from 'reactstrap';
+import DishDetail from './DishdetailComponent';
+
 class Menu extends Component {
-    /*The purpose of a constructor is to create an object and set values if there are any object properties present.*/
-  constructor(props) {
-      /* supply props to super class */
-    super(props);
-    /* Each component can store its local information in its "state" private and fully controlled by the component */
-/* can be passed as props to children */
 
-    this.state = {
-        /*no longer need the dishes in the state of the menu component, because I am receiving that as props from my parent, which is the App component*/
-/* now the dishes array copied to shared folder so that it can be used in other components also */
-      selectedDish: null,
-    };
-  }
+    constructor(props) {
+        super(props);
 
-  onDishSelect(dish) {
-    this.setState({ selectedDish: dish });
-  }
+        this.state = {
+            selectedDish: null
+        }
+    }
 
-  renderDish(dish) {
-    if (dish != null)
-        return(
-            <Card>
-                <CardImg top src={dish.image} alt={dish.name} />
-                <CardBody>
-                  <CardTitle>{dish.name}</CardTitle>
-                  <CardText>{dish.description}</CardText>
-                </CardBody>
-            </Card>
-        );
-    else
-        return(
-            <div></div>
-        );
-}
-/* render() will return the corresponding view for the component*/
-  render() {
-      /* defining a javascript const*/
-        /*this means that I will be iterating over every dish in the dishes array here.*/
-        /* this.state.dishes.map changed to this.props.dishes.map so it can fetch the dishes array from my parent */
-    const menu = this.props.dishes.map((dish) => {
-      return (
-        <div key={dish.id} className="col-12 col-md-5 m-1 ">
-          <Card onClick={() => this.onDishSelect(dish)} tag="li">
-            <CardImg width="100%" src={dish.image} alt={dish.name} />
+    onDishSelect(dish) {
+        this.setState({ selectedDish: dish});
+    }
 
-            <CardImgOverlay>
-              <CardTitle>{dish.name}</CardTitle>
-            </CardImgOverlay>
-          </Card>
-        </div>
-      );
-    });
+    renderDish(dish){
+        if(dish!=null){
+            return <DishDetail dish={this.state.selectedDish} />;
+        } else {
+            return <div></div>;
+        }
+    }
 
-    return (
-        <div className="container">
-            <div className="row">
-                {menu}
-            </div>
-            <div className="row">
+    render() {
+        const menu = this.props.dishes.map((dish) => {
+            return (
               <div  className="col-12 col-md-5 m-1">
-                {this.renderDish(this.state.selectedDish)}
+                <Card key={dish.id}
+                  onClick={() => this.onDishSelect(dish)}>
+                  <CardImg width="100%" src={dish.image} alt={dish.name} />
+                  <CardImgOverlay>
+                      <CardTitle>{dish.name}</CardTitle>
+                  </CardImgOverlay>
+                </Card>
               </div>
+            );
+        }
+        );
+
+        return (
+            <div className="container">
+                <div className="row">
+                    {menu}
+                </div>
+                <div className="row">
+                     {this.renderDish(this.state.selectedDish)}
+                </div>
             </div>
-        </div>
-    );
-  }
+        );
+    }
 }
 
 export default Menu;
